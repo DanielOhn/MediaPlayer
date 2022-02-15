@@ -38,44 +38,36 @@ class VLC_Player:
 		# creating a media
 		return vlc.Media(source)
 		# setting media to the player
-
 	
+	# Need to update this to get all of the directorys within Videos and select a random video
 	def getSource(self):
 		# Gets folders within the current directory
 		sub_folders = [name for name in os.listdir(dir_path) if os.path.isdir(os.path.join(dir_path, name))]
 
-		#print(sub_folders)
-		#print(random.choice(sub_folders))
-		
-		# print([name for name in os.listdir(".") if os.path.isdir(name)])
-		src = "{0}\{1}".format(dir_path, random.choice(sub_folders))
-		# 	print(src)
-		onlyfiles = [f for f in os.listdir(src) if isfile(join(src, f))]
+		# Get the Videos folder in root directory
+		video = None
+		for folder in sub_folders:
+			if folder == "Videos":
+				video = folder
+				
+		src = "{0}\{1}".format(dir_path, video)
 
-		#print("src: ", src)
+		# Get list of subdirectories in Videos folder
+		subfolders = os.listdir(src)
+		print(subfolders)
+		
+		src = "{0}\{1}\{2}".format(dir_path, video, random.choice(subfolders))
+		print(src)
+
+		onlyfiles = [f for f in os.listdir(src) if isfile(join(src, f))]
 
 		if (onlyfiles):
 			print("onlyfiles: ", onlyfiles)
-			src = src + "\{}".format(random.choice(onlyfiles))
+			src = src + "\{0}".format(random.choice(onlyfiles))
+			return src
 		
 		print(src)
 		return src
 
 video = VLC_Player()
 video.play()
-
-
-	
-# call the video method
-
-#getSrc()
-#while True:		
-		# wait time
-		#time.sleep(0.001)
-		
-		# getting the duration of the video
-		# duration = player.get_length()
-		# print(duration)
-		#time.sleep(duration)
-		# printing the duration of the video
-		#print("Duration : " + str(duration))
