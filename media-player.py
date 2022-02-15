@@ -1,19 +1,21 @@
 # importing time and vlc
 from inspect import getsource
+import re
 import time, vlc, os, msvcrt
 import random
 from os.path import isfile, join
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-isPlaying = False 
 
+
+# Plays a random video in VLC player fullscreened.
+# Resets itself and keeps playing videos, uses root directory and /Videos folder
+# to find subdirectories and video files.
 class VLC_Player:
 	def __init__(self):
 		self.instance = vlc.Instance()
 		self.player = vlc.MediaPlayer()
 		self.media = None
-
-		self.playing = False
 
 	def play(self):
 		source = self.getSource()
@@ -27,6 +29,12 @@ class VLC_Player:
 		# Get length of the video and play its full duration
 		time.sleep(0.5)
 		time.sleep(self.getDuration())
+		self.play()
+
+		self.reset()
+
+	def reset(self):
+		self.media = None 
 		self.play()
 
 	def getDuration(self):
@@ -56,21 +64,21 @@ class VLC_Player:
 		src = "{0}\{1}".format(dir_path, video)
 
 		# Get list of subdirectories in Videos folder
-		subfolders = os.listdir(src)
-		print(subfolders)
-		
-		src = "{0}\{1}\{2}".format(dir_path, video, random.choice(subfolders))
-		print(src)
-
 		onlyfiles = [f for f in os.listdir(src) if isfile(join(src, f))]
 
+		while(onlyfiles == []):
+			src = src + "\\" + self.getSubfolders(src)
+			onlyfiles = [f for f in os.listdir(src) if isfile(join(src, f))]
+
 		if (onlyfiles):
-			print("onlyfiles: ", onlyfiles)
 			src = src + "\{0}".format(random.choice(onlyfiles))
+			print(src)
 			return src
-		
-		print(src)
-		return src
+	
+	def getSubfolders(self, dir):
+		subfolders = os.listdir(dir)
+		subfolder = random.choice(subfolders)
+		return subfolder
 
 video = VLC_Player()
 video.play()
