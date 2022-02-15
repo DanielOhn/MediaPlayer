@@ -22,6 +22,9 @@ class VLC_Player:
 		self.player.set_media(self.media)
 		# play the video
 		self.player.play()
+		self.player.set_fullscreen(True)
+
+		# Get length of the video and play its full duration
 		time.sleep(0.5)
 		time.sleep(self.getDuration())
 		self.play()
